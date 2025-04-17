@@ -1,0 +1,7 @@
+[Dev]
+name = "Dev"
+entrypoint = "npm run dev"
+language = "nodejs"
+run_command = "npm run dev"
+on_file_change = "restart"
+persistent_dir = ["/home/runner/workspace/node_modules"]

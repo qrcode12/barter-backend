@@ -1,0 +1,4 @@
+[Workflow]
+name = "Express Server"
+command = "npm run dev"
+onBoot = true

@@ -1,0 +1,71 @@
+services:
+  - type: web
+    name: bartertap-server
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: node dist/server/index.js
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+
+  - type: web
+    name: bartertap
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: node render-server.js
+    healthCheckPath: /api/healthcheck
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    headers:
+      - path: /*
+        name: Content-Type
+        value: text/html; charset=utf-8
+      - path: /*.js
+        name: Content-Type
+        value: application/javascript; charset=utf-8
+      - path: /*.css
+        name: Content-Type
+        value: text/css; charset=utf-8
+      - path: /*.png
+        name: Content-Type
+        value: image/png
+      - path: /*.jpg
+        name: Content-Type
+        value: image/jpeg
+      - path: /*.svg
+        name: Content-Type
+        value: image/svg+xml
+    buildFilter:
+      paths:
+        - package.json
+        - package-lock.json
+        - client/**
+        - server/**
+        - shared/**
+        - public/**
+        - render-server.js
+        - api_healthcheck.js
+
+  - type: web
+    name: barter-api
+    env: node
+    plan: starter
+    region: frankfurt
+    buildCommand: npm ci
+    startCommand: node api_healthcheck.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true

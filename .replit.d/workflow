@@ -1,0 +1,1 @@
+[{"id":"server","start":"npm run dev","command":"npm run dev","restartOn":{"files":["**"],"fileIgnore":["node_modules/**","**/*.json","**/*.log"]},"docs":"Run the application server","name":"Start server"}]
