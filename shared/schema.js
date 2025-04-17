@@ -1,5 +1,6 @@
 import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 // Users table
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
@@ -74,6 +75,7 @@ export const messages = pgTable("messages", {
     senderId: integer("sender_id").notNull().references(() => users.id),
     content: text("content").notNull(),
     status: text("status").notNull().default("sent"),
+    isRead: boolean("is_read").default(false).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 export const insertMessageSchema = createInsertSchema(messages)
@@ -87,10 +89,14 @@ export const offers = pgTable("offers", {
     fromItemId: integer("from_item_id").notNull().references(() => items.id),
     toItemId: integer("to_item_id").notNull().references(() => items.id),
     status: text("status").notNull().default("pending"),
+    message: text("message"), // Added message field
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 export const insertOfferSchema = createInsertSchema(offers)
+    .extend({
+    message: z.string().nullable().optional()
+})
     .omit({ id: true, createdAt: true, updatedAt: true });
 // Notifications table
 export const notifications = pgTable("notifications", {
@@ -103,7 +109,10 @@ export const notifications = pgTable("notifications", {
     createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 export const insertNotificationSchema = createInsertSchema(notifications)
-    .omit({ id: true, isRead: true, createdAt: true });
+    .extend({
+    isRead: z.boolean().default(false).optional()
+})
+    .omit({ id: true, createdAt: true });
 // Favorites table
 export const favorites = pgTable("favorites", {
     id: serial("id").primaryKey(),

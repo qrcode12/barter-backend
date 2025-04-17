@@ -1,18 +1,16 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "outDir": "./dist/server",
-    "rootDir": "./",
+    "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "noEmit": false,
-    "allowImportingTsExtensions": false,
     "paths": {
       "@shared/*": ["./shared/*"]
     }
